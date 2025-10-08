@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Address & Location — HASIB</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <div class="container">
+    <header class="education-hero">
+      <h1>Address & Location</h1>
+      <p class="lead">Present, permanent and temporary addresses. Use the map to preview locations.</p>
+    </header>
+
+    <main class="section">
+      <div class="container">
+        <div class="edu-grid">
+          <article class="edu-card">
+            <h3>Present Address</h3>
+            <div class="edu-meta">
+              <div>Place: <strong>Chattogram University</strong></div>
+              <div>Village: <strong>Jobra</strong></div>
+              <div>Thana: <strong>Hathajari</strong></div>
+              <div>District: <strong>Chattogram</strong></div>
+              <div>Division: <strong>Chattogram</strong></div>
+              <div>Stay time: <strong>2023 to ..</strong></div>
+            </div>
+          </article>
+
+          <article class="edu-card">
+            <h3>Permanent Address</h3>
+            <div class="edu-meta">
+              <div>Village: <strong>Rouha</strong></div>
+              <div>Union: <strong>13 No Rouha</strong></div>
+              <div>Thana: <strong>Sherpur</strong></div>
+              <div>District: <strong>Sherpur</strong></div>
+              <div>Division: <strong>Mymensingh</strong></div>
+              <div>Stay Time: <strong>2004 to ...</strong></div>
+            </div>
+          </article>
+
+          <article class="edu-card">
+            <h3>Temporary address - 1</h3>
+            <div class="edu-meta">
+              <div>Place: <strong>Sherpur town</strong></div>
+              <div>Since: <strong>2020 to 2022</strong></div>
+              <div>Purpose: <strong>College</strong></div>
+            </div>
+          </article>
+
+          <article class="edu-card">
+            <h3>Temporary address - 2</h3>
+            <div class="edu-meta">
+              <div>Place: <strong>Mymensing town</strong></div>
+              <div>Since: <strong>2022 to 2023</strong></div>
+              <div>Purpose: <strong>Admission preparation</strong></div>
+            </div>
+          </article>
+        </div>
+
+        <section style="margin-top:1.25rem">
+          <h3>Map preview</h3>
+          <p class="lead">Click a location button to preview it on the embedded map.</p>
+
+          <div style="display:flex;gap:0.5rem;flex-wrap:wrap;margin-bottom:.75rem">
+            <button class="btn" data-q="Chattogram%20University%20Jobra">Present: Chattogram University</button>
+            <!-- use coordinate-based embed for Rowha (more reliable in iframes) -->
+            <button class="btn" data-src="https://www.google.com/maps?q=24.9361454,90.1144225&z=18&output=embed">Permanent: Rowha (Rouha)</button>
+            <button class="btn" data-q="Sherpur%20town%20Bangladesh">Temporary 1: Sherpur town</button>
+            <button class="btn" data-q="Mymensingh%20Bangladesh">Temporary 2: Mymensingh town</button>
+          </div>
+
+          <div id="map-wrap" style="border-radius:10px;overflow:hidden;border:1px solid rgba(255,255,255,.04)">
+            <iframe id="loc-map" width="100%" height="420" frameborder="0" style="border:0"
+              src="https://www.google.com/maps?q=Chattogram%20University%20Jobra&output=embed" allowfullscreen="" loading="lazy"></iframe>
+          </div>
+
+        </section>
+
+        <p style="margin-top:1rem"><a href="index.html" class="btn btn-outline">Back to home</a></p>
+      </div>
+    </main>
+  </div>
+
+  <script>
+    // Simple map selector: prefer a button's data-src (full URL) if present; otherwise use data-q and build a query embed
+    (function(){
+      const buttons = document.querySelectorAll('button[data-q], button[data-src]');
+      const iframe = document.getElementById('loc-map');
+      buttons.forEach(btn=>{
+        btn.addEventListener('click', ()=>{
+          const src = btn.getAttribute('data-src');
+          if(src){
+            // ensure embed output is present; if not, append
+            iframe.src = src.includes('output=embed') ? src : (src + (src.includes('?') ? '&' : '?') + 'output=embed');
+            return;
+          }
+          const q = btn.getAttribute('data-q');
+          iframe.src = `https://www.google.com/maps?q=${q}&output=embed`;
+        });
+      });
+    })();
+  </script>
+</body>
+</html>

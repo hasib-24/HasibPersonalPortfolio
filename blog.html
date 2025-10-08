@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Blog — Portfolio</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <div class="container">
+    <header class="blog-hero">
+      <h1>Blog</h1>
+      <div class="blog-words" aria-hidden="true">
+        <span class="bword">Write</span>
+        <span class="bword">Share</span>
+        <span class="bword">Grow</span>
+      </div>
+    </header>
+
+    <main class="blog-main">
+      <section class="blog-editor">
+        <h2>Create / Publish</h2>
+        <label>Title</label>
+        <input id="post-title" type="text" placeholder="Post title">
+
+        <label>External link (optional)</label>
+        <input id="post-external" type="url" placeholder="https://... (leave empty to publish here)">
+
+        <label>Cover image (optional)</label>
+        <input id="post-image" type="file" accept="image/*">
+
+        <label>Content</label>
+        <div id="post-content" class="post-content" contenteditable="true" placeholder="Write your post here. You can paste images or type text."></div>
+
+        <div style="margin-top:.6rem;display:flex;gap:.5rem;align-items:center">
+          <button id="save-post" class="btn">Publish to portfolio</button>
+          <button id="clear-editor" class="btn btn-outline">Clear</button>
+          <small id="editor-status" style="color:var(--muted)"></small>
+        </div>
+      </section>
+
+      <section class="blog-list-section">
+        <h2>Your posts</h2>
+        <div id="posts-list" class="posts-grid">
+          <!-- posts injected by JS -->
+        </div>
+      </section>
+    </main>
+
+    <p style="margin-top:1rem"><a href="index.html" class="btn btn-outline">Back to home</a></p>
+  </div>
+
+  <div id="post-modal" class="post-modal hidden" role="dialog" aria-modal="true">
+    <div class="post-modal-inner">
+      <button id="modal-close" class="btn btn-outline">Close</button>
+      <div id="modal-content"></div>
+    </div>
+  </div>
+
+  <script src="js/blog.js"></script>
+</body>
+</html>

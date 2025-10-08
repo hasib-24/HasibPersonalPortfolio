@@ -1,0 +1,157 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Your Name — Portfolio</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <!-- Welcome overlay shown on page load -->
+  <div id="welcome-overlay" class="welcome-overlay" role="dialog" aria-modal="true" aria-label="Welcome message">
+    <div class="welcome-content">
+      <h1 id="welcome-title">Welcome to my portfolio</h1>
+      <p id="welcome-sub">Exploring code, design and ideas...</p>
+      <button id="welcome-skip" class="btn btn-outline">Enter site</button>
+    </div>
+  </div>
+
+  
+
+  <header class="site-header">
+    <div class="container header-inner">
+      <a class="logo" href="#home">HASIB</a>
+      <button id="nav-toggle" class="nav-toggle" aria-label="Toggle navigation">☰</button>
+      <nav id="main-nav" class="main-nav">
+        <a href="#home">Home</a>
+        <a href="#about">About</a>
+        <a href="#projects">Projects</a>
+        <a href="#skills">Skills</a>
+        <a href="#contact">Contact</a>
+        <button id="theme-toggle" class="theme-toggle" aria-label="Toggle theme">🌙</button>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section id="home" class="hero">
+      <div class="container">
+        <h1>Hi, I’m <span id="display-name">HASIB</span>.</h1>
+        <p class="lead">A curious and dedicated Computer Science student passionate about programming, database systems, and creating efficient real-world solution.</p>
+        <p>
+          <a class="btn" href="#projects">See my work</a>
+          <a class="btn btn-outline" href="#contact">Get in touch</a>
+        </p>
+      </div>
+    </section>
+
+    <!-- Profile section with photo and expanded description -->
+    <section id="profile" class="section profile-section">
+      <div class="container profile-grid">
+        <div class="profile-photo" aria-hidden="true">
+          <!-- Replace "photo.jpg" with your photo file in the same folder or set an absolute URL -->
+          <img src="im.jpg" alt="HASIB" onerror="this.style.opacity=.2;this.alt='Profile photo placeholder'">
+        </div>
+        <div class="profile-body">
+          <h2>About me</h2>
+            <p class="profile-short">Hi! I’m Hasib, a dedicated and curious Computer Science student from Sherepur, currently studying in Chittagong. I have a strong interest in programming, database management, numerical methods, and software development, and I love tackling challenging problems and turning them into practical solutions..</p>
+            <div class="profile-full hidden" id="profile-full">
+              <p>I have experience in Python, C/C++, SQL, Arduino, and web development, and I’m continuously improving my skills in algorithm design, graph and tree problems, and DBMS concepts. I enjoy working on projects that combine theory and real-world applications, such as database systems, data analysis, and software tools.
+
+I’m passionate about learning, exploring new technologies, and creating efficient, clean, and optimized solutions. My portfolio highlights my projects, research work, and achievements that showcase my dedication to growth and problem-solving..</p>
+              <p>Contact me for freelance work, collaborations, or to say hello.</p>
+            </div>
+            <p>
+              <button id="read-more" class="btn btn-outline">Read more</button>
+            </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Quick links cards that navigate to dedicated pages -->
+    <section id="quick-links" class="section">
+      <div class="container">
+        <h2>Explore</h2>
+        <div class="cards-grid">
+          <a class="card-link" href="personal.html">Personal Details</a>
+          <a class="card-link" href="education.html">Education</a>
+          <a class="card-link" href="languages.html">Language skill</a>
+          <a class="card-link" href="technical-skills.html">Technical Skills</a>
+          <a class="card-link" href="projects.html">Projects</a>
+          <a class="card-link" href="blog.html">Blog</a>
+          <a class="card-link" href="address.html">Address &amp; Location</a>
+          
+        </div>
+      </div>
+    </section>
+
+    
+
+    <section id="projects" class="section">
+      <div class="container">
+        <h2>Projects</h2>
+        <div class="projects-grid" id="projects-grid">
+          <!-- Project cards inserted by JS or edit here -->
+          <article class="card">
+            <div class="card-media" aria-hidden="true">Project 1</div>
+            <div class="card-body">
+              <h3>Project One</h3>
+              <p>Short description of the project goes here. Add links to GitHub or live demos.</p>
+              <p><a class="btn btn-small" href="#">View</a></p>
+            </div>
+          </article>
+
+          <article class="card">
+            <div class="card-media" aria-hidden="true">Project 2</div>
+            <div class="card-body">
+              <h3>Project Two</h3>
+              <p>Short description of the project goes here.</p>
+              <p><a class="btn btn-small" href="#">View</a></p>
+            </div>
+          </article>
+
+        </div>
+      </div>
+    </section>
+
+    <section id="skills" class="section">
+      <div class="container">
+        <h2>Skills</h2>
+        <ul class="skills-list">
+          <li>HTML &amp; Semantic Markup</li>
+          <li>CSS (Flexbox, Grid, Responsive)</li>
+          <li>JavaScript (ES6+)</li>
+          <li>Accessibility &amp; Performance</li>
+        </ul>
+      </div>
+    </section>
+
+    <section id="contact" class="section">
+      <div class="container">
+        <h2>Contact</h2>
+        <form id="contact-form">
+          <label for="name">Name</label>
+          <input id="name" name="name" type="text" required>
+
+          <label for="email">Email</label>
+          <input id="email" name="email" type="email" required>
+
+          <label for="message">Message</label>
+          <textarea id="message" name="message" rows="5" required></textarea>
+
+          <button class="btn" type="submit">Send message</button>
+          <p id="form-status" class="form-status" aria-live="polite"></p>
+        </form>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <small>© <span id="year"></span> HASIB — Built with ❤️</small>
+    </div>
+  </footer>
+
+  <script src="js/main.js"></script>
+</body>
+</html>

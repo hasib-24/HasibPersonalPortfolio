@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Personal Details — MD Hasib Mia</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <div class="container">
+    <header class="education-hero">
+      <h1>Personal Details</h1>
+      
+    </header>
+
+    <main class="section">
+      <div class="container">
+        <div class="profile-grid">
+          <div class="profile-photo">
+            <img src="im.jpg" alt="MD Hasib Mia" onerror="this.style.opacity=.5">
+          </div>
+
+          <div class="profile-body">
+            <h2>MD Hasib Mia</h2>
+            <p class="profile-short">Computer Science student at Chattogram University — curious, hardworking, and building practical projects in software, data and systems.</p>
+
+            <div class="edu-grid" style="margin-top:1rem">
+              <article class="edu-card">
+                <h3>Basic</h3>
+                <div class="edu-meta">
+                  <div>Father: <strong>Rafiz Mia</strong></div>
+                  <div>Mother: <strong>MsT Hasi Begum</strong></div>
+                  <div>Siblings: <strong>Nayem, Rafi</strong></div>
+                  <div>Born: <strong>7 August 2004</strong></div>
+                  <div>Religion: <strong>Islam</strong></div>
+                  <div>Blood group: <strong>B++</strong></div>
+                </div>
+              </article>
+
+              <article class="edu-card">
+                <h3>Education & Current</h3>
+                <div class="edu-meta">
+                  <div>Current study: <strong>CSE, Chattogram University</strong></div>
+                  <div>Nationality: <strong>Bangladeshi</strong></div>
+                </div>
+              </article>
+
+              <article class="edu-card">
+                <h3>Contact</h3>
+                <div class="edu-meta">
+                  <div>Phone: <strong><a href="tel:+8801732525938">+8801732525938</a></strong></div>
+                  <div>Email: <strong><a href="mailto:hasib.cucse@gmail.com">hasib.cucse@gmail.com</a></strong></div>
+                </div>
+                <p style="margin-top:.6rem">
+                  <a class="btn" href="mailto:hasib.cucse@gmail.com">Email me</a>
+                  <a class="btn btn-outline" href="tel:+8801732525938">Call</a>
+                </p>
+              </article>
+
+            </div>
+
+            <div style="margin-top:1rem">
+              <h3>Short bio</h3>
+              <p>I enjoy solving problems with code, building small tools and learning systems-level concepts. I specialize in Python, C/C++ and web development; I’m exploring database internals and numerical methods for research and projects.</p>
+            </div>
+
+            <p style="margin-top:1rem"><a href="index.html" class="btn btn-outline">Back to home</a></p>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- optional: generate a downloadable vCard -->
+  <script>
+    // vCard generator function (creates and downloads a simple .vcf file)
+    function downloadVCard(){
+      const vcard = `BEGIN:VCARD\nVERSION:3.0\nN:Hasib;MD\nFN:MD Hasib Mia\nTEL;TYPE=CELL:+8801732525938\nEMAIL:hasib.cucse@gmail.com\nORG:Chattogram University;CSE\nEND:VCARD`;
+      const blob = new Blob([vcard],{type:'text/vcard'});
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = 'MD_Hasib_Mia.vcf';
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+    }
+
+    // attach to a floating control if desired
+    const dlBtn = document.createElement('button');
+    dlBtn.className = 'btn';
+    dlBtn.textContent = 'Download vCard';
+    dlBtn.style.position = 'fixed';
+    dlBtn.style.right = '18px';
+    dlBtn.style.bottom = '18px';
+    dlBtn.addEventListener('click', downloadVCard);
+    document.body.appendChild(dlBtn);
+  </script>
+</body>
+</html>
