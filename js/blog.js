@@ -16,6 +16,9 @@
   const modal = qs('#post-modal');
   const modalContent = qs('#modal-content');
   const modalClose = qs('#modal-close');
+  const exportBtn = qs('#export-posts');
+  const importBtn = qs('#import-posts');
+  const migrateBtn = qs('#migrate-posts');
 
   const STORAGE_KEY = 'portfolioPosts_v1';
   // Firestore variables (populated if firebaseConfig is provided)
@@ -45,6 +48,29 @@
       }
     }
     return false;
+  }
+
+  // migrate localStorage posts to Firestore once, to make them visible to others
+  async function migrateLocalToRemote(){
+    if(!useFirestore) return;
+    try{
+      const migrated = localStorage.getItem('portfolio_migrated_to_firestore_v1');
+      if(migrated) return;
+      const local = loadPosts();
+      if(!local || !local.length) return;
+      for(const p of local){
+        const obj = {
+          title: p.title || '',
+          external: p.external || '',
+          image: p.image || '',
+          content: p.content || '',
+          created: p.created || Date.now()
+        };
+        try{ await postsCol.add(obj); }catch(e){ console.warn('upload failed for post', p, e); }
+      }
+      localStorage.setItem('portfolio_migrated_to_firestore_v1','1');
+      console.log('Local posts migrated to Firestore');
+    }catch(e){ console.warn('Migration failed', e) }
   }
 
   async function loadPostsRemote(){
@@ -185,12 +211,60 @@
     renderPosts();
   });
 
+  // export local posts as JSON file
+  if(exportBtn){
+    exportBtn.addEventListener('click', ()=>{
+      const data = JSON.stringify(loadPosts() || [], null, 2);
+      const blob = new Blob([data], {type:'application/json'});
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = 'portfolio-posts.json';
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+    });
+  }
+
+  // import posts from pasted JSON (merge)
+  if(importBtn){
+    importBtn.addEventListener('click', async ()=>{
+      const text = prompt('Paste posts JSON here (it will be merged with existing posts)');
+      if(!text) return;
+      try{
+        const arr = JSON.parse(text);
+        if(!Array.isArray(arr)) throw new Error('Invalid format');
+        const current = loadPosts() || [];
+        const merged = current.concat(arr.map(p=>({
+          id: p.id || ('p'+Date.now().toString(36)),
+          title: p.title||'', external: p.external||'', image: p.image||'', content: p.content||'', created: p.created||Date.now()
+        })));
+        savePosts(merged);
+        alert('Imported '+arr.length+' posts locally.');
+        renderPosts();
+      }catch(e){ alert('Failed to import JSON: '+e.message) }
+    });
+  }
+
+  // manual migrate trigger
+  if(migrateBtn){
+    migrateBtn.addEventListener('click', async ()=>{
+      if(!useFirestore){ alert('Firestore not initialized — add js/firebase-config.js and reload'); return }
+      migrateBtn.textContent = 'Migrating...';
+      await migrateLocalToRemote();
+      migrateBtn.textContent = 'Migrate local → Remote';
+      alert('Migration attempted — check console for details.');
+      renderPosts();
+    });
+  }
+
   clearBtn.addEventListener('click', ()=>{ titleEl.value=''; externalEl.value=''; imageEl.value=''; contentEl.innerHTML=''; statusEl.textContent=''; });
 
   // initial render
   (async function boot(){
     const ok = await initFirestoreIfNeeded();
     if(ok){
+      // migrate any local posts (one-time)
+      await migrateLocalToRemote();
       // realtime update: listen to collection changes
       postsCol.orderBy('created','desc').onSnapshot(()=>{
         renderPosts();
