@@ -18,14 +18,57 @@
   const modalClose = qs('#modal-close');
 
   const STORAGE_KEY = 'portfolioPosts_v1';
+  // Firestore variables (populated if firebaseConfig is provided)
+  let useFirestore = false;
+  let db = null;
+  let postsCol = null;
 
   function loadPosts(){
+    // local fallback
     try{ return JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]') }catch(e){return []}
   }
   function savePosts(arr){ localStorage.setItem(STORAGE_KEY, JSON.stringify(arr)) }
 
-  function renderPosts(){
-    const posts = loadPosts().slice().reverse();
+  // remote (Firestore) helpers
+  async function initFirestoreIfNeeded(){
+    if(typeof firebaseConfig === 'object' && firebaseConfig){
+      try{
+        firebase.initializeApp(firebaseConfig);
+        db = firebase.firestore();
+        postsCol = db.collection('portfolio_posts');
+        useFirestore = true;
+        return true;
+      }catch(e){
+        console.warn('Firestore init failed', e);
+        useFirestore = false;
+        return false;
+      }
+    }
+    return false;
+  }
+
+  async function loadPostsRemote(){
+    if(!useFirestore) return loadPosts();
+    try{
+      const snap = await postsCol.orderBy('created','desc').get();
+      const arr = [];
+      snap.forEach(d=> arr.push(Object.assign({id:d.id}, d.data())));
+      return arr;
+    }catch(e){ console.warn('loadPostsRemote failed', e); return loadPosts(); }
+  }
+
+  async function savePostRemote(obj){
+    if(!useFirestore) return null;
+    try{
+      // push with created timestamp
+      const doc = await postsCol.add(obj);
+      return doc.id;
+    }catch(e){ console.warn('savePostRemote failed', e); return null }
+  }
+
+  async function renderPosts(){
+    const postsArr = useFirestore ? await loadPostsRemote() : loadPosts();
+    const posts = (postsArr || []).slice().reverse();
     // separate external and internal posts
     postsExternal.innerHTML = '';
     postsInternal.innerHTML = '';
@@ -78,6 +121,11 @@
   function deletePost(id){
     if(!confirm('Delete this post?')) return;
     let posts = loadPosts();
+    if(useFirestore){
+      // in Firestore we store posts as documents; id is doc id
+      postsCol.doc(id).delete().then(()=> renderPosts()).catch(err=>{console.error(err); alert('Failed to delete remote post')});
+      return;
+    }
     posts = posts.filter(p=>p.id!==id);
     savePosts(posts);
     renderPosts();
@@ -107,14 +155,28 @@
     }
     const posts = loadPosts();
     const id = 'p'+Date.now().toString(36);
-    posts.push({
+    const postObj = {
       id,
       title,
       external: external || '',
       image: imageData || '',
       content: rawHtml,
       created: Date.now()
-    });
+    };
+
+    if(useFirestore){
+      // save remotely and then re-render
+      statusEl.textContent = 'Publishing to remote...';
+      const docId = await savePostRemote(postObj);
+      if(docId){ statusEl.textContent = 'Published!'; setTimeout(()=> statusEl.textContent = '',1500); }
+      else { statusEl.textContent = 'Published locally'; setTimeout(()=> statusEl.textContent = '',1500); }
+      // clear editor
+      titleEl.value=''; externalEl.value=''; imageEl.value=''; contentEl.innerHTML='';
+      renderPosts();
+      return;
+    }
+
+    posts.push(postObj);
     savePosts(posts);
     statusEl.textContent = 'Published!';
     setTimeout(()=> statusEl.textContent = '',1500);
@@ -126,5 +188,15 @@
   clearBtn.addEventListener('click', ()=>{ titleEl.value=''; externalEl.value=''; imageEl.value=''; contentEl.innerHTML=''; statusEl.textContent=''; });
 
   // initial render
-  renderPosts();
+  (async function boot(){
+    const ok = await initFirestoreIfNeeded();
+    if(ok){
+      // realtime update: listen to collection changes
+      postsCol.orderBy('created','desc').onSnapshot(()=>{
+        renderPosts();
+      });
+    }
+    // initial render (remote or local)
+    renderPosts();
+  })();
 })();
