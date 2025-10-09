@@ -11,6 +11,8 @@
   const clearBtn = qs('#clear-editor');
   const statusEl = qs('#editor-status');
   const postsList = qs('#posts-list');
+  const postsExternal = qs('#posts-external');
+  const postsInternal = qs('#posts-internal');
   const modal = qs('#post-modal');
   const modalContent = qs('#modal-content');
   const modalClose = qs('#modal-close');
@@ -24,33 +26,37 @@
 
   function renderPosts(){
     const posts = loadPosts().slice().reverse();
-    postsList.innerHTML = '';
-    posts.forEach((p, i)=>{
+    // separate external and internal posts
+    postsExternal.innerHTML = '';
+    postsInternal.innerHTML = '';
+
+    posts.forEach((p)=>{
       const el = document.createElement('article');
       el.className = 'card';
-      el.innerHTML = `
-        <div class="card-media">${p.image ? `<img src="${p.image}" alt="cover">` : 'PG' }</div>
-        <div class="card-body">
-          <h3>${escapeHtml(p.title||'Untitled')}</h3>
-          <p class="muted">${p.external ? 'External post' : 'Published on portfolio'}</p>
-          <div style="margin-top:.5rem;display:flex;gap:.5rem;align-items:center">
-            ${p.external ? `<a class="btn btn-small" href="${escapeHtml(p.external)}" target="_blank" rel="noopener">Visit</a>` : `<button class="btn btn-small view-post" data-id="${p.id}">View</button>`}
-            <button class="btn btn-outline delete-post" data-id="${p.id}">Delete</button>
-          </div>
-        </div>
-      `;
-      postsList.appendChild(el);
+      const media = p.image ? `<img src="${p.image}" alt="cover">` : 'PG';
+      const body = document.createElement('div');
+      body.className = 'card-body';
+      body.innerHTML = `
+        <h3>${escapeHtml(p.title||'Untitled')}</h3>
+        <p class="muted">${p.external ? 'External post' : 'Published on portfolio'}</p>
+        <div style="margin-top:.5rem;display:flex;gap:.5rem;align-items:center">
+          ${p.external ? `<a class="btn btn-small external-read" href="${escapeHtml(p.external)}" target="_blank" rel="noopener">Read</a>` : `<button class="btn btn-small view-post" data-id="${p.id}">Read</button>`}
+          <button class="btn btn-outline delete-post" data-id="${p.id}">Delete</button>
+        </div>`;
+
+      el.innerHTML = `<div class="card-media">${media}</div>`;
+      el.appendChild(body);
+
+      if(p.external){
+        postsExternal.appendChild(el);
+      } else {
+        postsInternal.appendChild(el);
+      }
     });
 
-    // attach view/delete handlers
-    qsa('.view-post').forEach(btn=> btn.addEventListener('click', ()=>{
-      const id = btn.getAttribute('data-id');
-      openPost(id);
-    }));
-    qsa('.delete-post').forEach(btn=> btn.addEventListener('click', ()=>{
-      const id = btn.getAttribute('data-id');
-      deletePost(id);
-    }));
+    // attach handlers
+    qsa('.view-post').forEach(btn=> btn.addEventListener('click', ()=> openPost(btn.getAttribute('data-id'))));
+    qsa('.delete-post').forEach(btn=> btn.addEventListener('click', ()=> deletePost(btn.getAttribute('data-id'))));
   }
 
   function escapeHtml(s){ return String(s).replace(/[&<>\"]/g, c=>({
@@ -101,7 +107,14 @@
     }
     const posts = loadPosts();
     const id = 'p'+Date.now().toString(36);
-    posts.push({id,title,external:imageData?imageData:null,content:rawHtml,created:Date.now()});
+    posts.push({
+      id,
+      title,
+      external: external || '',
+      image: imageData || '',
+      content: rawHtml,
+      created: Date.now()
+    });
     savePosts(posts);
     statusEl.textContent = 'Published!';
     setTimeout(()=> statusEl.textContent = '',1500);
