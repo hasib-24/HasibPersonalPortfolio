@@ -9,7 +9,7 @@
 <body>
   <div class="container">
     <header class="blog-hero">
-      <h1>Blog</h1>
+      <h1>Blogs And Articles</h1>
       <div class="blog-words" aria-hidden="true">
         <span class="bword">Write</span>
         <span class="bword">Share</span>
@@ -17,51 +17,109 @@
       </div>
     </header>
 
-    <main class="blog-main">
-      <section class="blog-editor">
-        <h2>Create / Publish</h2>
-        <label>Title</label>
-        <input id="post-title" type="text" placeholder="Post title">
+    <div class="blog-motivation">
+      <p class="blog-motive">Every idea begins with a single thought. I write to capture small experiments, lessons learned, and useful code — so others can learn faster and build with confidence. If one post helps you solve a problem or sparks a new idea, that is progress. Keep learning, keep sharing.</p>
+    </div>
 
-        <label>External link (optional)</label>
-        <input id="post-external" type="url" placeholder="https://... (leave empty to publish here)">
-
-        <label>Cover image (optional)</label>
-        <input id="post-image" type="file" accept="image/*">
-
-        <label>Content</label>
-        <div id="post-content" class="post-content" contenteditable="true" placeholder="Write your post here. You can paste images or type text."></div>
-
-        <div style="margin-top:.6rem;display:flex;gap:.5rem;align-items:center">
-          <button id="save-post" class="btn">Publish to portfolio</button>
-          <button id="clear-editor" class="btn btn-outline">Clear</button>
-          <small id="editor-status" style="color:var(--muted)"></small>
+    <main class="projects-grid" style="margin-top:1rem">
+      <article class="card">
+        <div class="card-media" aria-hidden="true">
+          <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/35/Tux.svg/250px-Tux.svg.png" alt="Hoodies Website screenshot" onerror="this.style.opacity=.25;this.alt='Project image placeholder'">
         </div>
-
-        <div style="margin-top:.6rem;display:flex;gap:.5rem;align-items:center">
-          <button id="export-posts" class="btn btn-outline">Export posts (JSON)</button>
-          <button id="import-posts" class="btn btn-outline">Import posts (JSON)</button>
-          <button id="migrate-posts" class="btn">Migrate local → Remote</button>
+        <div class="card-body">
+          <h3>What is linux?</h3>
+          <p>লিনাক্স এর ইতিহাস </p>
+          <div class="tags"><small>Read • Learn • Grow</small></div>
+          <p><a class="btn btn-small" href="https://www.projukti.org/linux/58">View</a></p>
         </div>
+      </article>
+      <article class="card">
+        <div class="card-media" aria-hidden="true">
+          <img src="db.jpg" alt="Database photo" onerror="this.style.opacity=.25;this.alt='Project image placeholder'">
         </div>
-      </section>
-
-      <section class="blog-list-section">
-        <h2>Shared blogs</h2>
-        <p class="lead">Links you share from other sites. Readers will be taken to the original article when they click Read.</p>
-        <div id="posts-external" class="posts-grid">
-          <!-- external posts injected by JS -->
+        <div class="card-body">
+          <h3>ডেটাবেজ ম্যানেজমেন্ট সিস্টেম</h3>
+           <p></p> 
+          <div class="tags"><small>DBMS</small></div>
+          <div class="tags"><small>Read • Learn • Grow</small></div>
+          <br>
+          <p><a class="btn btn-small" href="https://www.w3classroom.com/2024/02/database-management-system.html">View</a></p>
         </div>
+      </article>
 
-        <hr style="margin:1.25rem 0;border:none;border-top:1px solid rgba(255,255,255,.04)">
-
-        <h2>My posts</h2>
-        <p class="lead">Articles you publish on this portfolio. Click Read to view the full post here.</p>
-        <div id="posts-internal" class="posts-grid">
-          <!-- internal posts injected by JS -->
+      <article class="card">
+        <div class="card-media" aria-hidden="true">
+          <img src="p1.png" alt="Poastgresql" onerror="this.style.opacity=.25;this.alt='Project image placeholder'">
         </div>
-      </section>
+        <div class="card-body">
+          <h3>Basics of PostgreSQL</h3>
+          <p>Basics of PostgreSQL- বাংলা (Part - 01)</p>
+           <div class="tags"><small>Read • Learn • Grow</small></div>
+          <p><a class="btn btn-small" href="https://lifeofloco.blogspot.com/2021/03/basics-of-postgresql.html">View</a></p>
+        </div>
+      </article>
+
+
+  <article class="card">
+        <div class="card-media" aria-hidden="true">
+          <img src="p1.png" alt="Poastgresql" onerror="this.style.opacity=.25;this.alt='Project image placeholder'">
+        </div>
+        <div class="card-body">
+          <h3>Basics of PostgreSQL</h3>
+          <p>Basics of PostgreSQL- বাংলা (Part - 02)</p>
+           <div class="tags"><small>Read • Learn • Grow</small></div>
+          <p><a class="btn btn-small" href="https://lifeofloco.blogspot.com/2021/03/basics-of-postgresql-part-2.html?m=1">View</a></p>
+        </div>
+      </article>
+
+
+
+
+      <article class="card">
+        <div class="card-media" aria-hidden="true">
+          <img src="quicksort.png" alt="Quicksort" onerror="this.style.opacity=.25;this.alt='Project image placeholder'">
+        </div>
+        <div class="card-body">
+          <h3>Quick sort</h3>
+          <p>কুইক-সর্ট-অ্যালগরিদম</p>
+          <div class="tags"><small>Read• Learn• Grow</small></div>
+          <p><a class="btn btn-small" href="https://hellohasan.com/2016/11/02/%E0%A6%95%E0%A7%81%E0%A6%87%E0%A6%95-%E0%A6%B8%E0%A6%B0%E0%A7%8D%E0%A6%9F-%E0%A6%85%E0%A7%8D%E0%A6%AF%E0%A6%BE%E0%A6%B2%E0%A6%97%E0%A6%B0%E0%A6%BF%E0%A6%A6%E0%A6%AE-quicksort-algorithm/">View</a></p>
+        </div>
+      </article>
+
+
+ <article class="card">
+        <div class="card-media" aria-hidden="true">
+          <img src="merge.png" alt="Mergesort" onerror="this.style.opacity=.25;this.alt='Project image placeholder'">
+        </div>
+        <div class="card-body">
+          <h3>Mergesort</h3>
+          <p>মার্জ-সর্ট-অ্যালগরিদম-</p>
+          <div class="tags"><small>Read• Learn• Grow</small></div>
+          <p><a class="btn btn-small" href="https://hellohasan.com/2016/10/22/%E0%A6%AE%E0%A6%BE%E0%A6%B0%E0%A7%8D%E0%A6%9C-%E0%A6%B8%E0%A6%B0%E0%A7%8D%E0%A6%9F-%E0%A6%85%E0%A7%8D%E0%A6%AF%E0%A6%BE%E0%A6%B2%E0%A6%97%E0%A6%B0%E0%A6%BF%E0%A6%A6%E0%A6%AE-merge-sort-algorithm/">View</a></p>
+        </div>
+      </article>
+
+
+
+
+
+         <!-- Template for create card -->
+
+      <!-- <article class="card">
+        <div class="card-media" aria-hidden="true">
+          <img src="assets/project4.jpg" alt="Arduino Sensor Logger" onerror="this.style.opacity=.25;this.alt='Project image placeholder'">
+        </div>
+        <div class="card-body">
+          <h3>Article name</h3>
+          <p>Simple Details</p>
+          <div class="tags"><small>Read• Learn• Grow</small></div>
+          <p><a class="btn btn-small" href="Aritcle link">View</a></p>
+        </div>
+      </article> -->
+      
     </main>
+   
 
     <p style="margin-top:1rem"><a href="index.html" class="btn btn-outline">Back to home</a></p>
   </div>

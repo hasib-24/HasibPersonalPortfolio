@@ -178,6 +178,9 @@ section#quick-links > .container{
   transform: translateY(-6px);
   box-shadow: 0 12px 30px rgba(24,24,48,0.14);
 }
+
+.blog-motivation{max-width:900px;margin:0 auto;padding:8px 12px 18px;text-align:center}
+.blog-motive{color:var(--muted);font-style:italic;margin:0}
 .map-wrap{border-radius:10px;overflow:hidden;border:1px solid rgba(255,255,255,.04)}
 .map-controls{display:flex;gap:.5rem;flex-wrap:wrap;margin-bottom:.75rem}
 .blog-editor{background:var(--panel-alt);padding:1rem;border-radius:10px}
@@ -187,14 +190,28 @@ section#quick-links > .container{
 .post-modal{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(2,6,23,.6);z-index:120}
 .post-modal .post-modal-inner{background:var(--panel);padding:1rem;border-radius:10px;max-width:900px;max-height:80vh;overflow:auto}
 .posts-grid .card{display:flex;gap:1rem;align-items:flex-start}
-.posts-grid .card .card-media{height:80px;width:120px;flex:0 0 120px}
-.posts-grid .card .card-media img{height:80px;object-fit:cover}
+.posts-grid .card .card-media{
+  /* fixed thumbnail column on desktop */
+  width:120px;
+  flex:0 0 120px;
+  aspect-ratio: 4 / 3;
+  overflow:hidden;
+  border-radius:8px;
+  display:block;
+  background:linear-gradient(135deg,var(--accent),#60a5fa);
+}
+.posts-grid .card .card-media img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  display:block;
+}
 
 @media (max-width:980px){
   .blog-main{grid-template-columns:1fr}
   .posts-grid .card{flex-direction:column}
-  .posts-grid .card .card-media{width:100%;height:160px}
-  .posts-grid .card .card-media img{height:160px}
+  .posts-grid .card .card-media{width:100%;flex:0 0 auto;height:160px;aspect-ratio: auto}
+  .posts-grid .card .card-media img{width:100%;height:100%;object-fit:cover}
 }
 
 /* Technical skills grid */
@@ -228,9 +245,20 @@ button.vcard-float{position:fixed;right:18px;bottom:18px;border-radius:10px;padd
 }
 
 .projects-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:1rem}
-.card{background:linear-gradient(180deg,rgba(255,255,255,.02),transparent);border-radius:var(--radius);overflow:hidden;box-shadow:0 6px 20px rgba(2,6,23,.4)}
-.card-media{height:120px;background:linear-gradient(135deg,var(--accent),#60a5fa);display:flex;align-items:center;justify-content:center;font-weight:700}
-.card-media img{width:100%;height:120px;object-fit:cover;display:block}
+.card{background:linear-gradient(180deg,rgba(255,255,255,.02),transparent);border-radius:var(--radius);overflow:hidden;box-shadow:0 6px 20px rgba(2,6,23,.4);transition:transform .32s cubic-bezier(.2,.9,.2,1),box-shadow .32s ease;position:relative}
+.card-media{position:relative;overflow:hidden;border-radius:8px;height:160px;display:block}
+.projects-grid .card-media img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .5s ease}
+.projects-grid .card:hover{transform:translateY(-8px) scale(1.02);box-shadow:0 24px 60px rgba(2,6,23,.36), 0 0 0 6px rgba(125,211,252,0.14)}
+.projects-grid .card:hover .card-media img{transform:scale(1.06)}
+
+/* subtle bottom accent line that animates in on hover */
+.projects-grid .card::after{display:none !important}
+.projects-grid .card::before{display:none !important}
+.projects-grid .card > *{position:relative;z-index:1}
+
+/* apply the same subtle 4px ring for post cards in lists */
+.posts-grid .card:hover{transform:translateY(-6px);box-shadow:0 18px 46px rgba(2,6,23,.30), 0 0 0 6px rgba(125,211,252,0.12)}
+.projects-grid .card .card-body{padding:0.85rem}
 .card-body{padding:1rem}
 .card h3{margin:.25rem 0}
 .btn-small{padding:.35rem .6rem;font-size:.9rem}
@@ -238,6 +266,45 @@ button.vcard-float{position:fixed;right:18px;bottom:18px;border-radius:10px;padd
 .skills-list li{background:rgba(255,255,255,.03);padding:.5rem .75rem;border-radius:6px;color:var(--muted)}
 .site-footer{padding:1.5rem 0;color:var(--muted)}
 .form-status{margin-top:.5rem;color:var(--accent)}
+
+/* Mission & Vision styles */
+.mission-section .container{background:linear-gradient(180deg,rgba(255,255,255,.01),transparent);padding:1.25rem;border-radius:12px;border:1px solid rgba(255,255,255,0.03);box-shadow:0 8px 28px rgba(2,6,23,.28)}
+.mission-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:1rem;margin-top:1rem;align-items:stretch}
+.mission-card{display:flex;gap:1rem;align-items:flex-start;padding:1rem;border-radius:10px;background:linear-gradient(180deg,rgba(255,255,255,.02),transparent);box-shadow:0 8px 30px rgba(2,6,23,.18);transition:transform .22s ease,box-shadow .22s ease;border:1px solid rgba(255,255,255,0.03)}
+.mission-card:hover{transform:translateY(-6px);box-shadow:0 20px 56px rgba(2,6,23,.36)}
+.mv-icon{flex:0 0 56px;height:56px;background:linear-gradient(135deg,var(--accent),#60a5fa);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:1.6rem;color:#042028;box-shadow:0 8px 30px rgba(2,6,23,.18)}
+.mv-body h3{margin:0 0 .35rem;color:var(--accent)}
+.mv-text{color:var(--muted);margin:0}
+
+@media (max-width:700px){
+  .mission-grid{grid-template-columns:1fr}
+  .mv-icon{flex:0 0 48px;height:48px;font-size:1.2rem}
+}
+
+/* Contact panel styles */
+.contact-panel{background:linear-gradient(180deg,rgba(255,255,255,.01),transparent);padding:1.25rem;border-radius:12px;border:1px solid rgba(255,255,255,0.03);box-shadow:0 8px 28px rgba(2,6,23,.28)}
+.contact-grid{display:grid;grid-template-columns:1fr 360px;gap:1rem;align-items:start}
+.contact-form{display:flex;flex-direction:column;gap:.5rem}
+.contact-form input[type="text"],.contact-form input[type="email"],.contact-form textarea{width:100%;padding:.6rem;border-radius:8px;border:1px solid rgba(255,255,255,.06);background:transparent;color:var(--text)}
+.contact-actions{display:flex;gap:.5rem;margin-top:.5rem}
+.contact-side{padding:1rem;border-radius:10px;background:linear-gradient(180deg,rgba(255,255,255,.02),transparent);border:1px solid rgba(255,255,255,0.03)}
+.contact-intro{color:var(--muted);margin:0 0 .6rem}
+.social-buttons{display:flex;flex-wrap:wrap;gap:.5rem}
+.social-btn{display:inline-flex;align-items:center;justify-content:center;width:44px;height:44px;border-radius:10px;background:linear-gradient(135deg,var(--panel-alt),var(--panel));color:#fff;text-decoration:none;box-shadow:0 8px 20px rgba(2,6,23,.12);transition:transform .18s ease,box-shadow .18s ease,opacity .18s ease}
+.social-btn svg{display:block}
+.social-btn:hover{transform:translateY(-4px);box-shadow:0 18px 42px rgba(2,6,23,.22);opacity:0.98}
+.social-btn.facebook{background:linear-gradient(135deg,#3b5998,#2d4373)}
+.social-btn.whatsapp{background:linear-gradient(135deg,#25D366,#128C7E)}
+.social-btn.linkedin{background:linear-gradient(135deg,#0077B5,#005582)}
+.social-btn.instagram{background:linear-gradient(135deg,#f58529,#dd2a7b)}
+.social-btn.github{background:linear-gradient(135deg,#333,#0f0f0f)}
+.social-btn.mail{background:linear-gradient(135deg,var(--accent),#60a5fa);color:#042028}
+.contact-info{margin-top:1rem;color:var(--muted);font-size:.95rem}
+
+@media (max-width:980px){
+  .contact-grid{grid-template-columns:1fr}
+  .contact-side{order:2}
+}
 @media (max-width:700px){
   .nav-toggle{display:block}
   .main-nav{position:fixed;right:12px;top:64px;background:var(--panel);padding:1rem;border-radius:8px;flex-direction:column;display:none}

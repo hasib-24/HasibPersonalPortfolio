@@ -63,6 +63,7 @@
           title: p.title || '',
           external: p.external || '',
           image: p.image || '',
+          thumb: p.thumb || '',
           content: p.content || '',
           created: p.created || Date.now()
         };
@@ -102,7 +103,8 @@
     posts.forEach((p)=>{
       const el = document.createElement('article');
       el.className = 'card';
-      const media = p.image ? `<img src="${p.image}" alt="cover">` : 'PG';
+  const thumbnailSrc = p.thumb || p.image || '';
+  const media = thumbnailSrc ? `<img src="${thumbnailSrc}" alt="cover">` : 'PG';
       const body = document.createElement('div');
       body.className = 'card-body';
       body.innerHTML = `
@@ -133,6 +135,20 @@
   }[c])) }
 
   function openPost(id){
+    if(useFirestore){
+      // fetch remote document
+      postsCol.doc(id).get().then(doc=>{
+        if(!doc.exists) return alert('Post not found');
+        const post = Object.assign({id:doc.id}, doc.data());
+        modalContent.innerHTML = `
+          <h2>${escapeHtml(post.title)}</h2>
+          ${post.image ? `<img src="${post.image}" style="max-width:100%;border-radius:8px;margin-bottom:.75rem">` : ''}
+          <div>${post.content}</div>
+        `;
+        modal.classList.remove('hidden');
+      }).catch(e=>{console.error(e); alert('Failed to load post')});
+      return;
+    }
     const posts = loadPosts();
     const post = posts.find(x=>x.id === id);
     if(!post) return alert('Post not found');
@@ -169,15 +185,77 @@
     })
   }
 
+  // helper: load file into an Image element
+  function loadImageFromFile(file){
+    return new Promise((resolve,reject)=>{
+      const fr = new FileReader();
+      fr.onload = ()=>{
+        const img = new Image();
+        img.onload = ()=> resolve(img);
+        img.onerror = reject;
+        img.src = fr.result;
+      };
+      fr.onerror = reject;
+      fr.readAsDataURL(file);
+    });
+  }
+
+  // helper: resize an Image element to max dimensions and return dataURL (jpeg)
+  function resizeImageElement(img, maxW, maxH, mime='image/jpeg', quality=0.82){
+    const canvas = document.createElement('canvas');
+    let {width: w, height: h} = img;
+    const ratio = Math.min(1, Math.min(maxW / w, maxH / h));
+    w = Math.round(w * ratio);
+    h = Math.round(h * ratio);
+    canvas.width = w;
+    canvas.height = h;
+    const ctx = canvas.getContext('2d');
+    ctx.drawImage(img, 0, 0, w, h);
+    return canvas.toDataURL(mime, quality);
+  }
+
+  // helper: create a centered-cropped thumbnail (exact width/height)
+  function makeThumbnail(img, w, h, mime='image/jpeg', quality=0.82){
+    const canvas = document.createElement('canvas');
+    canvas.width = w; canvas.height = h;
+    const ctx = canvas.getContext('2d');
+    // compute crop box (cover behavior)
+    const srcRatio = img.width / img.height;
+    const destRatio = w / h;
+    let sx, sy, sw, sh;
+    if(srcRatio > destRatio){
+      // source is wider -> crop left/right
+      sh = img.height;
+      sw = Math.round(sh * destRatio);
+      sx = Math.round((img.width - sw) / 2);
+      sy = 0;
+    } else {
+      // source taller -> crop top/bottom
+      sw = img.width;
+      sh = Math.round(sw / destRatio);
+      sx = 0;
+      sy = Math.round((img.height - sh) / 2);
+    }
+    ctx.drawImage(img, sx, sy, sw, sh, 0, 0, w, h);
+    return canvas.toDataURL(mime, quality);
+  }
+
   saveBtn.addEventListener('click', async ()=>{
     const title = titleEl.value.trim();
     const external = externalEl.value.trim();
     const rawHtml = contentEl.innerHTML.trim();
     if(!title){ statusEl.textContent = 'Please add a title.'; return }
     statusEl.textContent = 'Saving...';
-    let imageData = null;
+    let imageData = '';
+    let thumbData = '';
     if(imageEl.files && imageEl.files[0]){
-      try{ imageData = await readImageAsDataURL(imageEl.files[0]) }catch(e){console.error(e)}
+      try{
+        const img = await loadImageFromFile(imageEl.files[0]);
+        // full image: max 1200px each dimension
+        imageData = resizeImageElement(img, 1200, 1200, 'image/jpeg', 0.86);
+        // thumbnail: exact 320x240 crop
+        thumbData = makeThumbnail(img, 320, 240, 'image/jpeg', 0.82);
+      }catch(e){console.error('Image processing failed', e);}
     }
     const posts = loadPosts();
     const id = 'p'+Date.now().toString(36);
@@ -186,6 +264,7 @@
       title,
       external: external || '',
       image: imageData || '',
+      thumb: thumbData || '',
       content: rawHtml,
       created: Date.now()
     };
